@@ -1,7 +1,6 @@
 import React from 'react';
 import Navhome from '../nav/Navhome';
 import { useNavigate } from 'react-router-dom';
-import Modal from './Modal';
 import Componente from './Componente';
 import Piepagina from './Piepagina';
 

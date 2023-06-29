@@ -3,11 +3,11 @@ import Navhome from '../nav/Navhome';
 import { useNavigate } from 'react-router-dom';
 import Modal from './Modal';
 import Piepagina from './Piepagina';
+import Spiner from './Spiner';
 
 const Home = () => {
-
+  const [showSpinner, setShowSpinner] = useState(false);
   const [estadoModal1, cambiarEstadoModal1] = useState(false)
-  const [selectedCarnet, setSelectedCarnet] = useState(null);
 
   const navigate = useNavigate();
   const [movies, setMovies] = useState([]);
@@ -29,42 +29,23 @@ const Home = () => {
   const [selectedCarnetData, setSelectedCarnetData] = useState(null);
 
   const handleCarnetClick = (movie) => {
-    setSelectedCarnet(movie._id);
     setSelectedCarnetData(movie);
     cambiarEstadoModal1(true);
   };
   
 
   
-  const handleformulario = () => {
-    navigate('/formulario');
+  const handleHome = async (route) => {
+    setShowSpinner(true); // Mostrar el spinner
+    // Simular un retraso de 3 segundos
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    setShowSpinner(false); // Ocultar el spinner
+
+    navigate(route); // Redirigir a la ruta especificada
   };
 
-  const handleDelete = async (carnetId) => {
-    try {
-      const response = await fetch(`http://localhost:5000/carnet/${carnetId}`, {
-        method: 'DELETE',
-      });
 
-      if (response.ok) {
-        // Éxito: el carnet se eliminó correctamente
-        // Realiza alguna acción, como mostrar un mensaje de éxito
-        console.log('Carnet eliminado correctamente');
-        cambiarEstadoModal1(false);
-        fetchCarnetData(); // Actualiza los datos de los carnets
-      } else if (response.status === 404) {
-        // Error: el servidor devuelve un error 404 (no se encontró el carnet)
-        const errorMessage = await response.text();
-        console.log(errorMessage);
-      } else {
-        // Error: el carnet no se pudo eliminar
-        // Realiza alguna acción, como mostrar un mensaje de error genérico
-        console.log('Error al eliminar el carnet');
-      }
-    } catch (error) {
-      console.log('Error:', error);
-    }
-  };
 
   
   return (
@@ -72,7 +53,8 @@ const Home = () => {
       <Navhome />
       <div className='cards'>
         <div className='navegacion'>
-          <button onClick={handleformulario}>Ingresar Datos</button>
+        <button onClick={() => handleHome('/formulario')}>Ingresar Datos</button>
+        <button onClick={() => handleHome('/administrador')}>Participantes</button>
         </div>
         <div className='container'>
           {movies.map((movie) => (
@@ -139,7 +121,6 @@ const Home = () => {
       <p className='negrita'>Fecha de concurso: <span className='blanco'> {selectedCarnetData.fechaconcurso} </span> </p>
       <p className='negrita'>Fecha de nacimiento: <span className='blanco'> {selectedCarnetData.nacimiento} </span> </p>
     </div>
-    <button  className='cerrarbot' onClick={() => handleDelete(selectedCarnet)}>Eliminar</button>
     </div>
 
       
@@ -148,6 +129,11 @@ const Home = () => {
     </Modal>
     <div>
     <Piepagina/>
+    </div>
+    <div>
+    <div>
+        {showSpinner && <Spiner />}
+        </div>
     </div>
     </div>
   );

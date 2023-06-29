@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import Navhome from '../nav/Navhome'
 import { useNavigate } from 'react-router-dom';
-import Modalerror from '../components/Modalerror';
 import Piepagina from '../components/Piepagina';
+import Spiner from '../components/Spiner';
+
 const Formulario = () => {
-  const [estadoModal1, cambiarEstadoModal1] = useState(false)
-  const [serverErrorMessage, setServerErrorMessage] = useState('');
+
+  const [showSpinner, setShowSpinner] = useState(false);
   const [formData, setFormData] = useState({
     nombre: '',
     direccion: '',
@@ -20,9 +21,15 @@ const Formulario = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  const handleHome = () => {
-    navigate("/home");
-  }
+  const handleHome = async (route) => {
+    setShowSpinner(true); // Mostrar el spinner
+    // Simular un retraso de 3 segundos
+    await new Promise((resolve) => setTimeout(resolve, 3000));
+
+    setShowSpinner(false); // Ocultar el spinner
+
+    navigate(route); // Redirigir a la ruta especificada
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +41,14 @@ const Formulario = () => {
         return; // Detener la ejecución si hay un campo vacío
       }
     }
+
+    setShowSpinner(true);
+
+    // Simular espera de 5 segundos
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+
+    // Ocultar spinner
+    setShowSpinner(false);
 
     // Aquí puedes realizar la llamada a tu API para enviar los datos
     try {
@@ -79,7 +94,8 @@ const Formulario = () => {
         <Navhome/>
         <div className='cards'>
         <div className='navegacion'>
-                <button onClick={handleHome}> Participantes </button>
+        <button onClick={() => handleHome('/home')}>Ver Carnets</button>
+        <button onClick={() => handleHome('/administrador')}>Participantes</button>
             </div>
             <div className='formularios'>
               <form action=""  onSubmit={handleSubmit}>
@@ -166,15 +182,10 @@ const Formulario = () => {
               </form>
             </div>
         </div>
-        {serverErrorMessage && (
-      <Modalerror 
-      estado={estadoModal1}
-      cambiarEstado={setServerErrorMessage}>
-        <h1>Error</h1>
-        <p>{serverErrorMessage}</p>
-      </Modalerror>
-    )}
-
+      
+        <div>
+        {showSpinner && <Spiner />}
+        </div>
     <div>
       <Piepagina/>
     </div>
