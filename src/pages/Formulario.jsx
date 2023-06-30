@@ -52,7 +52,7 @@ const Formulario = () => {
 
     // Aquí puedes realizar la llamada a tu API para enviar los datos
     try {
-      const response = await fetch('http://localhost:5000/carnet', {
+      const response = await fetch('https://carnettapi-production-05da.up.railway.app/carnet', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

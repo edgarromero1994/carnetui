@@ -18,7 +18,7 @@ const Home = () => {
 
   const fetchCarnetData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/carnet');
+      const response = await fetch('https://carnettapi-production-05da.up.railway.app/carnet');
       const data = await response.json();
       setMovies(data.arrayCarnet);
     } catch (error) {
